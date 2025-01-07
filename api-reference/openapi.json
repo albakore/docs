@@ -1,195 +1,1401 @@
 {
-  "openapi": "3.0.1",
-  "info": {
-    "title": "OpenAPI Plant Store",
-    "description": "A sample API that uses a plant store as an example to demonstrate features in the OpenAPI specification",
-    "license": {
-      "name": "MIT"
-    },
-    "version": "1.0.0"
-  },
-  "servers": [
-    {
-      "url": "http://sandbox.mintlify.com"
-    }
-  ],
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
-  "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
-      }
-    }
-  }
+"openapi": "3.1.0",
+"info": {
+"title": "providers-service API",
+"version": "0.1.0"
+},
+"servers": [
+{
+"url": "/api/providerService/v1"
+}
+],
+"paths": {
+"/invoices/": {
+"get": {
+"tags": [
+"Invoices"
+],
+"summary": "Get All Invoices",
+"operationId": "get_all_invoices_invoices__get",
+"security": [
+{
+"internal": []
+}
+],
+"parameters": [
+{
+"name": "limit",
+"in": "query",
+"required": false,
+"schema": {
+"type": "integer",
+"default": 50,
+"title": "Limit"
+}
+},
+{
+"name": "page",
+"in": "query",
+"required": false,
+"schema": {
+"type": "integer",
+"default": 0,
+"title": "Page"
+}
+},
+{
+"name": "states",
+"in": "query",
+"required": false,
+"schema": {
+"type": "string",
+"default": "Created,Submitted",
+"title": "States"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {}
+}
+}
+},
+"422": {
+"description": "Validation Error",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/HTTPValidationError"
+}
+}
+}
+}
+}
+},
+"post": {
+"tags": [
+"Invoices"
+],
+"summary": "Invoice Create",
+"operationId": "invoice_create_invoices__post",
+"security": [
+{
+"internal": []
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"multipart/form-data": {
+"schema": {
+"$ref": "#/components/schemas/Body_invoice_create_invoices__post"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {}
+}
+}
+},
+"422": {
+"description": "Validation Error",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/HTTPValidationError"
+}
+}
+}
+}
+}
+}
+},
+"/invoices/{id_invoice}/yiqi-push": {
+"post": {
+"tags": [
+"Invoices"
+],
+"summary": "Push To Yiqi",
+"operationId": "push_to_yiqi_invoices__id_invoice__yiqi_push_post",
+"security": [
+{
+"internal": []
+}
+],
+"parameters": [
+{
+"name": "id_invoice",
+"in": "path",
+"required": true,
+"schema": {
+"type": "integer",
+"title": "Id Invoice"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {}
+}
+}
+},
+"422": {
+"description": "Validation Error",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/HTTPValidationError"
+}
+}
+}
+}
+}
+}
+},
+"/invoices/{id_invoice}": {
+"patch": {
+"tags": [
+"Invoices"
+],
+"summary": "Invoice Modify",
+"operationId": "invoice_modify_invoices__id_invoice__patch",
+"security": [
+{
+"internal": []
+}
+],
+"parameters": [
+{
+"name": "id_invoice",
+"in": "path",
+"required": true,
+"schema": {
+"type": "integer",
+"title": "Id Invoice"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"multipart/form-data": {
+"schema": {
+"$ref": "#/components/schemas/Body_invoice_modify_invoices__id_invoice__patch"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {}
+}
+}
+},
+"422": {
+"description": "Validation Error",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/HTTPValidationError"
+}
+}
+}
+}
+}
+},
+"get": {
+"tags": [
+"Invoices"
+],
+"summary": "Get Invoice",
+"operationId": "get_invoice_invoices__id_invoice__get",
+"security": [
+{
+"internal": []
+}
+],
+"parameters": [
+{
+"name": "id_invoice",
+"in": "path",
+"required": true,
+"schema": {
+"type": "integer",
+"title": "Id Invoice"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {}
+}
+}
+},
+"422": {
+"description": "Validation Error",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/HTTPValidationError"
+}
+}
+}
+}
+}
+},
+"delete": {
+"tags": [
+"Invoices"
+],
+"summary": "Delete Invoice",
+"operationId": "delete_invoice_invoices__id_invoice__delete",
+"security": [
+{
+"internal": []
+}
+],
+"parameters": [
+{
+"name": "id_invoice",
+"in": "path",
+"required": true,
+"schema": {
+"type": "integer",
+"title": "Id Invoice"
+}
+}
+],
+"requestBody": {
+"required": true,
+"content": {
+"application/x-www-form-urlencoded": {
+"schema": {
+"$ref": "#/components/schemas/Body_delete_invoice_invoices__id_invoice__delete"
+}
+}
+}
+},
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {}
+}
+}
+},
+"422": {
+"description": "Validation Error",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/HTTPValidationError"
+}
+}
+}
+}
+}
+}
+},
+"/providers/yiqi/createInvoice": {
+"post": {
+"tags": [
+"Providers"
+],
+"summary": "Create Invoice",
+"operationId": "create_invoice_providers_yiqi_createInvoice_post",
+"requestBody": {
+"content": {
+"multipart/form-data": {
+"schema": {
+"$ref": "#/components/schemas/Body_create_invoice_providers_yiqi_createInvoice_post"
+}
+}
+},
+"required": true
+},
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {}
+}
+}
+},
+"422": {
+"description": "Validation Error",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/HTTPValidationError"
+}
+}
+}
+}
+},
+"security": [
+{
+"internal": []
+}
+]
+}
+},
+"/providers/currencies": {
+"get": {
+"tags": [
+"Providers"
+],
+"summary": "Get Currencies",
+"operationId": "get_currencies_providers_currencies_get",
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {}
+}
+}
+}
+}
+}
+},
+"/providers/services": {
+"get": {
+"tags": [
+"Providers"
+],
+"summary": "Get Services",
+"operationId": "get_services_providers_services_get",
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {}
+}
+}
+}
+}
+}
+},
+"/providers/invoices": {
+"get": {
+"tags": [
+"Providers"
+],
+"summary": "Get Invoices",
+"operationId": "get_invoices_providers_invoices_get",
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {}
+}
+}
+}
+},
+"security": [
+{
+"internal": []
+}
+]
+}
+},
+"/contacts/": {
+"get": {
+"tags": [
+"Contacts"
+],
+"summary": "Get All Contacts",
+"operationId": "get_all_contacts_contacts__get",
+"security": [
+{
+"internal": []
+}
+],
+"parameters": [
+{
+"name": "page",
+"in": "query",
+"required": false,
+"schema": {
+"type": "integer",
+"default": 0,
+"title": "Page"
+}
+},
+{
+"name": "limit",
+"in": "query",
+"required": false,
+"schema": {
+"type": "integer",
+"default": 10,
+"title": "Limit"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {
+"type": "array",
+"items": {
+"$ref": "#/components/schemas/Contact"
+},
+"title": "Response Get All Contacts Contacts  Get"
+}
+}
+}
+},
+"422": {
+"description": "Validation Error",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/HTTPValidationError"
+}
+}
+}
+}
+}
+}
+},
+"/contacts/session": {
+"get": {
+"tags": [
+"Contacts"
+],
+"summary": "Get Contact",
+"operationId": "get_contact_contacts_session_get",
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {}
+}
+}
+}
+},
+"security": [
+{
+"internal": []
+}
+]
+}
+},
+"/contacts/auth": {
+"post": {
+"tags": [
+"Contacts"
+],
+"summary": "Get Contact",
+"operationId": "get_contact_contacts_auth_post",
+"requestBody": {
+"content": {
+"application/x-www-form-urlencoded": {
+"schema": {
+"$ref": "#/components/schemas/Body_get_contact_contacts_auth_post"
+}
+}
+},
+"required": true
+},
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {}
+}
+}
+},
+"422": {
+"description": "Validation Error",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/HTTPValidationError"
+}
+}
+}
+}
+}
+}
+},
+"/contacts/register": {
+"post": {
+"tags": [
+"Contacts"
+],
+"summary": "Get Contact",
+"operationId": "get_contact_contacts_register_post",
+"requestBody": {
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/ContactRegister"
+}
+}
+},
+"required": true
+},
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Contact"
+}
+}
+}
+},
+"422": {
+"description": "Validation Error",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/HTTPValidationError"
+}
+}
+}
+}
+}
+}
+},
+"/contacts/restorepassword": {
+"post": {
+"tags": [
+"Contacts"
+],
+"summary": "Restore Password",
+"operationId": "restore_password_contacts_restorepassword_post",
+"parameters": [
+{
+"name": "email",
+"in": "query",
+"required": true,
+"schema": {
+"type": "string",
+"title": "Email"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {}
+}
+}
+},
+"422": {
+"description": "Validation Error",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/HTTPValidationError"
+}
+}
+}
+}
+}
+}
+},
+"/contacts/recover/{uuid_restorepassword}": {
+"post": {
+"tags": [
+"Contacts"
+],
+"summary": "Recover Password",
+"operationId": "recover_password_contacts_recover__uuid_restorepassword__post",
+"parameters": [
+{
+"name": "uuid_restorepassword",
+"in": "path",
+"required": true,
+"schema": {
+"type": "string",
+"format": "uuid",
+"title": "Uuid Restorepassword"
+}
+},
+{
+"name": "password",
+"in": "query",
+"required": true,
+"schema": {
+"type": "string",
+"title": "Password"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {}
+}
+}
+},
+"422": {
+"description": "Validation Error",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/HTTPValidationError"
+}
+}
+}
+}
+}
+}
+},
+"/contacts/active/{uuid}": {
+"put": {
+"tags": [
+"Contacts"
+],
+"summary": "Set Active",
+"operationId": "set_active_contacts_active__uuid__put",
+"parameters": [
+{
+"name": "uuid",
+"in": "path",
+"required": true,
+"schema": {
+"type": "string",
+"format": "uuid",
+"description": "El **id** del contacto",
+"title": "Uuid"
+},
+"description": "El **id** del contacto",
+"example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+},
+{
+"name": "set",
+"in": "query",
+"required": false,
+"schema": {
+"type": "boolean",
+"default": true,
+"title": "Set"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Contact"
+}
+}
+}
+},
+"422": {
+"description": "Validation Error",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/HTTPValidationError"
+}
+}
+}
+}
+}
+}
+},
+"/contacts/{id}": {
+"get": {
+"tags": [
+"Contacts"
+],
+"summary": "Get Contact",
+"operationId": "get_contact_contacts__id__get",
+"parameters": [
+{
+"name": "id",
+"in": "path",
+"required": true,
+"schema": {
+"type": "integer",
+"title": "Id"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Successful Response",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/Contact"
+}
+}
+}
+},
+"422": {
+"description": "Validation Error",
+"content": {
+"application/json": {
+"schema": {
+"$ref": "#/components/schemas/HTTPValidationError"
+}
+}
+}
+}
+}
+}
+}
+},
+"components": {
+"schemas": {
+"Body_create_invoice_providers_yiqi_createInvoice_post": {
+"properties": {
+"provider": {
+"type": "integer",
+"title": "Provider"
+},
+"numero": {
+"type": "string",
+"title": "Numero"
+},
+"concepto": {
+"type": "string",
+"title": "Concepto"
+},
+"fecha_emision": {
+"type": "string",
+"format": "date",
+"title": "Fecha Emision"
+},
+"fecha_recepcion": {
+"type": "string",
+"format": "date",
+"title": "Fecha Recepcion"
+},
+"mes_servicio": {
+"type": "string",
+"title": "Mes Servicio"
+},
+"precio_unitario": {
+"type": "integer",
+"title": "Precio Unitario"
+},
+"tipo_moneda": {
+"type": "integer",
+"title": "Tipo Moneda"
+},
+"awb": {
+"anyOf": [
+{
+"type": "string"
+},
+{
+"type": "null"
+}
+],
+"title": "Awb"
+},
+"kg": {
+"anyOf": [
+{
+"type": "number"
+},
+{
+"type": "null"
+}
+],
+"title": "Kg"
+},
+"items": {
+"anyOf": [
+{
+"type": "integer"
+},
+{
+"type": "null"
+}
+],
+"title": "Items"
+},
+"comprobante": {
+"anyOf": [
+{
+"type": "string",
+"format": "binary"
+},
+{
+"type": "null"
+}
+],
+"title": "Comprobante"
+},
+"detalle": {
+"anyOf": [
+{
+"type": "string",
+"format": "binary"
+},
+{
+"type": "null"
+}
+],
+"title": "Detalle"
+}
+},
+"type": "object",
+"required": [
+"provider",
+"numero",
+"concepto",
+"fecha_emision",
+"fecha_recepcion",
+"mes_servicio",
+"precio_unitario",
+"tipo_moneda"
+],
+"title": "Body_create_invoice_providers_yiqi_createInvoice_post"
+},
+"Body_delete_invoice_invoices__id_invoice__delete": {
+"properties": {
+"password": {
+"type": "string",
+"title": "Password"
+}
+},
+"type": "object",
+"required": [
+"password"
+],
+"title": "Body_delete_invoice_invoices__id_invoice__delete"
+},
+"Body_get_contact_contacts_auth_post": {
+"properties": {
+"grant_type": {
+"anyOf": [
+{
+"type": "string",
+"pattern": "password"
+},
+{
+"type": "null"
+}
+],
+"title": "Grant Type"
+},
+"username": {
+"type": "string",
+"title": "Username"
+},
+"password": {
+"type": "string",
+"title": "Password"
+},
+"scope": {
+"type": "string",
+"title": "Scope",
+"default": ""
+},
+"client_id": {
+"anyOf": [
+{
+"type": "string"
+},
+{
+"type": "null"
+}
+],
+"title": "Client Id"
+},
+"client_secret": {
+"anyOf": [
+{
+"type": "string"
+},
+{
+"type": "null"
+}
+],
+"title": "Client Secret"
+}
+},
+"type": "object",
+"required": [
+"username",
+"password"
+],
+"title": "Body_get_contact_contacts_auth_post"
+},
+"Body_invoice_create_invoices__post": {
+"properties": {
+"numero": {
+"type": "string",
+"title": "Numero"
+},
+"concepto": {
+"type": "string",
+"title": "Concepto"
+},
+"mes_servicio": {
+"type": "string",
+"title": "Mes Servicio"
+},
+"precio_unitario": {
+"type": "integer",
+"title": "Precio Unitario"
+},
+"tipo_moneda": {
+"type": "integer",
+"title": "Tipo Moneda",
+"description": "Corresponde al ID de la moneda en YiQi"
+},
+"fecha_emision": {
+"type": "string",
+"format": "date",
+"title": "Fecha Emision",
+"description": "Tiene que ser en formato YYYY-MM-DD"
+},
+"awb": {
+"type": "string",
+"title": "Awb"
+},
+"kg": {
+"type": "number",
+"title": "Kg"
+},
+"items": {
+"type": "integer",
+"title": "Items"
+},
+"comprobante": {
+"anyOf": [
+{
+"type": "string",
+"format": "binary"
+},
+{
+"type": "null"
+}
+],
+"title": "Comprobante"
+},
+"detalle": {
+"anyOf": [
+{
+"type": "string",
+"format": "binary"
+},
+{
+"type": "null"
+}
+],
+"title": "Detalle"
+}
+},
+"type": "object",
+"required": [
+"numero",
+"concepto",
+"mes_servicio",
+"precio_unitario",
+"tipo_moneda",
+"fecha_emision"
+],
+"title": "Body_invoice_create_invoices__post"
+},
+"Body_invoice_modify_invoices__id_invoice__patch": {
+"properties": {
+"numero": {
+"type": "string",
+"title": "Numero"
+},
+"concepto": {
+"type": "string",
+"title": "Concepto"
+},
+"mes_servicio": {
+"type": "string",
+"title": "Mes Servicio"
+},
+"precio_unitario": {
+"type": "integer",
+"title": "Precio Unitario"
+},
+"tipo_moneda": {
+"type": "integer",
+"title": "Tipo Moneda",
+"description": "Corresponde al ID de la moneda en YiQi"
+},
+"fecha_emision": {
+"type": "string",
+"format": "date",
+"title": "Fecha Emision",
+"description": "Tiene que ser en formato YYYY-MM-DD"
+},
+"awb": {
+"type": "string",
+"title": "Awb"
+},
+"kg": {
+"type": "number",
+"title": "Kg"
+},
+"items": {
+"type": "integer",
+"title": "Items"
+},
+"comprobante": {
+"anyOf": [
+{
+"type": "string",
+"format": "binary"
+},
+{
+"type": "null"
+}
+],
+"title": "Comprobante"
+},
+"detalle": {
+"anyOf": [
+{
+"type": "string",
+"format": "binary"
+},
+{
+"type": "null"
+}
+],
+"title": "Detalle"
+}
+},
+"type": "object",
+"required": [
+"numero",
+"concepto",
+"mes_servicio",
+"precio_unitario",
+"tipo_moneda",
+"fecha_emision"
+],
+"title": "Body_invoice_modify_invoices__id_invoice__patch"
+},
+"Contact": {
+"properties": {
+"id": {
+"anyOf": [
+{
+"type": "string",
+"format": "uuid"
+},
+{
+"type": "null"
+}
+],
+"title": "Id"
+},
+"name": {
+"anyOf": [
+{
+"type": "string"
+},
+{
+"type": "null"
+}
+],
+"title": "Name"
+},
+"skype": {
+"anyOf": [
+{
+"type": "string"
+},
+{
+"type": "null"
+}
+],
+"title": "Skype"
+},
+"role": {
+"anyOf": [
+{
+"type": "string"
+},
+{
+"type": "null"
+}
+],
+"title": "Role"
+},
+"phone_number": {
+"anyOf": [
+{
+"type": "string"
+},
+{
+"type": "null"
+}
+],
+"title": "Phone Number"
+},
+"invoicing_contact": {
+"anyOf": [
+{
+"type": "boolean"
+},
+{
+"type": "null"
+}
+],
+"title": "Invoicing Contact"
+},
+"email": {
+"anyOf": [
+{
+"type": "string"
+},
+{
+"type": "null"
+}
+],
+"title": "Email"
+},
+"hashword": {
+"anyOf": [
+{
+"type": "string"
+},
+{
+"type": "null"
+}
+],
+"title": "Hashword"
+},
+"is_active": {
+"anyOf": [
+{
+"type": "boolean"
+},
+{
+"type": "null"
+}
+],
+"title": "Is Active",
+"default": true
+},
+"date_last_session": {
+"anyOf": [
+{
+"type": "string",
+"format": "date-time"
+},
+{
+"type": "null"
+}
+],
+"title": "Date Last Session"
+},
+"date_registration": {
+"anyOf": [
+{
+"type": "string",
+"format": "date-time"
+},
+{
+"type": "null"
+}
+],
+"title": "Date Registration"
+},
+"id_provider": {
+"anyOf": [
+{
+"type": "integer"
+},
+{
+"type": "null"
+}
+],
+"title": "Id Provider"
+}
+},
+"type": "object",
+"title": "Contact"
+},
+"ContactRegister": {
+"properties": {
+"name": {
+"anyOf": [
+{
+"type": "string"
+},
+{
+"type": "null"
+}
+],
+"title": "Name"
+},
+"skype": {
+"anyOf": [
+{
+"type": "string"
+},
+{
+"type": "null"
+}
+],
+"title": "Skype"
+},
+"role": {
+"anyOf": [
+{
+"type": "string"
+},
+{
+"type": "null"
+}
+],
+"title": "Role"
+},
+"phone_number": {
+"anyOf": [
+{
+"type": "string"
+},
+{
+"type": "null"
+}
+],
+"title": "Phone Number"
+},
+"invoicing_contact": {
+"anyOf": [
+{
+"type": "boolean"
+},
+{
+"type": "null"
+}
+],
+"title": "Invoicing Contact"
+},
+"email": {
+"type": "string",
+"title": "Email"
+},
+"password": {
+"type": "string",
+"title": "Password"
+},
+"id_provider": {
+"anyOf": [
+{
+"type": "integer"
+},
+{
+"type": "null"
+}
+],
+"title": "Id Provider"
+},
+"provider_name": {
+"type": "string",
+"title": "Provider Name"
+}
+},
+"type": "object",
+"required": [
+"email",
+"password",
+"provider_name"
+],
+"title": "ContactRegister"
+},
+"HTTPValidationError": {
+"properties": {
+"detail": {
+"items": {
+"$ref": "#/components/schemas/ValidationError"
+},
+"type": "array",
+"title": "Detail"
+}
+},
+"type": "object",
+"title": "HTTPValidationError"
+},
+"ValidationError": {
+"properties": {
+"loc": {
+"items": {
+"anyOf": [
+{
+"type": "string"
+},
+{
+"type": "integer"
+}
+]
+},
+"type": "array",
+"title": "Location"
+},
+"msg": {
+"type": "string",
+"title": "Message"
+},
+"type": {
+"type": "string",
+"title": "Error Type"
+}
+},
+"type": "object",
+"required": [
+"loc",
+"msg",
+"type"
+],
+"title": "ValidationError"
+}
+},
+"securitySchemes": {
+"internal": {
+"type": "oauth2",
+"flows": {
+"password": {
+"scopes": {},
+"tokenUrl": "/api/providerService/v1/contacts/auth"
+}
+}
+}
+}
+}
 }
