@@ -28,7 +28,8 @@
   "tabs": [
     {
       "name": "API Reference",
-      "url": "api-reference"
+      "url": "api-reference",
+      "openapi": "http://10.0.100.114/api/providerService/v1/openapi.json"
     }
   ],
   "anchors": [
