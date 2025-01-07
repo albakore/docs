@@ -6,7 +6,7 @@
 },
 "servers": [
 {
-"url": "/api/providerService/v1"
+"url": "http://10.0.100.114/api/providerService/v1"
 }
 ],
 "paths": {
